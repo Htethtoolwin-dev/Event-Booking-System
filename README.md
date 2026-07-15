@@ -1,36 +1,120 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Event Booking System
+
+A production-quality full-stack event booking platform built with Next.js 15, Prisma, SQLite, and JWT authentication (HttpOnly cookies).
+
+## Features
+
+### User
+- Register, login, logout
+- Browse, search, and filter events
+- View event details and book seats
+- Cancel bookings and view booking history
+- Update profile (name, email, password)
+
+### Admin
+- Secure admin dashboard with metrics
+- Create, edit, and delete events
+- Manage event capacity
+- View all bookings and users
+
+## Tech Stack
+
+- **Next.js 15** (App Router)
+- **React 19** + **TypeScript**
+- **Tailwind CSS** + **shadcn/ui**
+- **Prisma ORM** + **SQLite**
+- **JWT** (`jose`) in HttpOnly cookies
+- **Zod** validation
+- **bcryptjs** password hashing
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 20.19+
+- npm
+
+### Setup
 
 ```bash
+# Install dependencies
+npm install
+
+# Copy environment variables
+cp .env.example .env
+
+# Run migrations and seed data
+npm run db:migrate
+npm run db:seed
+
+# Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Seed Accounts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Role  | Email             | Password   |
+|-------|-------------------|------------|
+| Admin | admin@example.com | Admin123!  |
+| User  | user@example.com  | User123!   |
 
-## Learn More
+## Environment Variables
 
-To learn more about Next.js, take a look at the following resources:
+```env
+DATABASE_URL="file:./prisma/dev.db"
+JWT_SECRET="your-32-char-random-secret-here"
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Scripts
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Command           | Description                    |
+|-------------------|--------------------------------|
+| `npm run dev`     | Start dev server               |
+| `npm run build`   | Production build               |
+| `npm run start`   | Start production server        |
+| `npm run lint`    | Run ESLint                     |
+| `npm test`        | Run unit tests                 |
+| `npm run db:seed` | Seed database                  |
+| `npm run db:studio` | Open Prisma Studio           |
 
-## Deploy on Vercel
+## Architecture
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```
+src/
+├── app/           # App Router pages
+├── actions/       # Server Actions (mutations)
+├── components/    # Reusable UI components
+├── lib/           # Auth, DB, validations, utilities
+├── middleware.ts  # Route protection
+└── types/         # Shared TypeScript types
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Security
+
+- JWT stored in HttpOnly, SameSite=Lax cookies
+- Middleware protects `/bookings`, `/profile`, `/admin/*`
+- Server Actions re-verify session and role on every mutation
+- Users can only cancel their own bookings
+- Admin role is never accepted from client input
+
+## Manual Test Checklist
+
+- [ ] Register a new user and log in
+- [ ] Browse events with search/filter
+- [ ] Book an event and verify seat count decreases
+- [ ] Cancel a booking and verify seat count increases
+- [ ] Update profile name and password
+- [ ] Log in as admin and access dashboard
+- [ ] Create, edit, and delete an event
+- [ ] Attempt `/admin` as a regular user (should redirect)
+- [ ] Attempt to book when sold out (should fail)
+
+## Deployment Notes
+
+SQLite works well for local development and portfolio demos. For production deployment (e.g. Vercel), migrate to **PostgreSQL** since serverless environments use ephemeral filesystems.
+
+## License
+
+MIT

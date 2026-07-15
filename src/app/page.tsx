@@ -1,103 +1,91 @@
-import Image from "next/image";
+import Link from "next/link";
+import { getFilteredEvents } from "@/actions/events";
+import { EventCard } from "@/components/events/event-card";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Calendar, Shield, Sparkles } from "lucide-react";
 
-export default function Home() {
+export default async function HomePage() {
+  const featuredEvents = await getFilteredEvents({});
+  const upcoming = featuredEvents.slice(0, 3);
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div>
+      <section className="border-b bg-gradient-to-b from-primary/5 to-background">
+        <div className="mx-auto flex max-w-7xl flex-col items-center gap-8 px-4 py-20 text-center sm:px-6 lg:px-8">
+          <div className="inline-flex items-center gap-2 rounded-full border bg-background px-4 py-1 text-sm text-muted-foreground">
+            <Sparkles className="h-4 w-4 text-primary" />
+            Portfolio-grade event booking platform
+          </div>
+          <h1 className="max-w-3xl text-4xl font-bold tracking-tight sm:text-5xl">
+            Discover events. Book in seconds. Manage everything in one place.
+          </h1>
+          <p className="max-w-2xl text-lg text-muted-foreground">
+            Browse concerts, conferences, and workshops. Secure JWT authentication,
+            real-time seat management, and a full admin dashboard.
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <Link href="/events">
+              <Button size="lg" className="gap-2">
+                Browse events
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+            </Link>
+            <Link href="/register">
+              <Button size="lg" variant="outline">
+                Create account
+              </Button>
+            </Link>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <div className="mb-10 grid gap-6 md:grid-cols-3">
+          <div className="rounded-xl border bg-card p-6">
+            <Calendar className="mb-3 h-8 w-8 text-primary" />
+            <h3 className="font-semibold">Smart event discovery</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Search and filter by keyword, location, and date range.
+            </p>
+          </div>
+          <div className="rounded-xl border bg-card p-6">
+            <Shield className="mb-3 h-8 w-8 text-primary" />
+            <h3 className="font-semibold">Secure authentication</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              JWT stored in HttpOnly cookies with role-based route protection.
+            </p>
+          </div>
+          <div className="rounded-xl border bg-card p-6">
+            <Sparkles className="mb-3 h-8 w-8 text-primary" />
+            <h3 className="font-semibold">Real-time capacity</h3>
+            <p className="mt-2 text-sm text-muted-foreground">
+              Transactional booking logic keeps seat counts accurate.
+            </p>
+          </div>
+        </div>
+
+        <div className="mb-8 flex items-end justify-between">
+          <div>
+            <h2 className="text-2xl font-bold tracking-tight">Featured events</h2>
+            <p className="text-muted-foreground">Upcoming events you can book today</p>
+          </div>
+          <Link href="/events" className="text-sm font-medium text-primary hover:underline">
+            View all
+          </Link>
+        </div>
+
+        {upcoming.length > 0 ? (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {upcoming.map((event) => (
+              <EventCard key={event.id} event={event} />
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-xl border border-dashed p-12 text-center text-muted-foreground">
+            No events available yet. Check back soon.
+          </div>
+        )}
+      </section>
     </div>
   );
 }
