@@ -6,7 +6,7 @@ const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
 const nextConfig: NextConfig = {
   outputFileTracingRoot: projectRoot,
-  serverExternalPackages: ["better-sqlite3", "@prisma/adapter-better-sqlite3"],
+  serverExternalPackages: ["pg", "@prisma/adapter-pg"],
   images: {
     remotePatterns: [
       {

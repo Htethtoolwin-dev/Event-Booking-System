@@ -63,9 +63,11 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Environment Variables
 
 ```env
-DATABASE_URL="file:./prisma/dev.db"
+DATABASE_URL="postgresql://USER:PASSWORD@HOST:5432/DATABASE?sslmode=require"
 JWT_SECRET="your-32-char-random-secret-here"
 ```
+
+Use [Neon](https://neon.tech) (free) or Vercel Postgres for a hosted PostgreSQL database.
 
 ## Scripts
 
@@ -111,9 +113,25 @@ src/
 - [ ] Attempt `/admin` as a regular user (should redirect)
 - [ ] Attempt to book when sold out (should fail)
 
-## Deployment Notes
+## Deploy to Vercel
 
-SQLite works well for local development and portfolio demos. For production deployment (e.g. Vercel), migrate to **PostgreSQL** since serverless environments use ephemeral filesystems.
+1. Push this repo to GitHub and import it in [Vercel](https://vercel.com).
+2. Create a **PostgreSQL** database ([Neon](https://neon.tech) free tier works well).
+3. In **Vercel → Project → Settings → Environment Variables**, add:
+
+| Name | Value |
+|------|-------|
+| `DATABASE_URL` | Your PostgreSQL connection string (must start with `postgresql://`) |
+| `JWT_SECRET` | A random string, at least 32 characters |
+
+4. Redeploy. The build runs `prisma migrate deploy`, seeds demo data, then builds Next.js.
+
+**Seed accounts after deploy:**
+
+| Role | Email | Password |
+|------|-------|----------|
+| Admin | admin@example.com | Admin123! |
+| User | user@example.com | User123! |
 
 ## License
 
