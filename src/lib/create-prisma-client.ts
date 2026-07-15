@@ -1,20 +1,22 @@
-import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaNeon } from "@prisma/adapter-neon";
 import { PrismaClient } from "@/generated/prisma/client";
 
+function cleanEnvValue(value: string | undefined) {
+  return value?.trim().replace(/^["']|["']$/g, "");
+}
+
 function getDatabaseUrl() {
-  const connectionString = process.env.DATABASE_URL?.trim();
+  const connectionString = cleanEnvValue(process.env.DATABASE_URL);
 
   if (!connectionString) {
     throw new Error(
-      "DATABASE_URL is not set. Add a PostgreSQL connection string to your .env file.",
+      "DATABASE_URL is not set. Add a PostgreSQL connection string in Vercel Environment Variables.",
     );
   }
 
   if (connectionString.startsWith("file:")) {
     throw new Error(
-      "DATABASE_URL still points to SQLite (file:...). This project uses PostgreSQL. " +
-        "Create a free database at https://neon.tech, copy the connection string, " +
-        "and set DATABASE_URL=postgresql://... in your .env file.",
+      "DATABASE_URL still points to SQLite (file:...). Use a Neon PostgreSQL connection string instead.",
     );
   }
 
@@ -23,7 +25,7 @@ function getDatabaseUrl() {
     !connectionString.startsWith("postgres://")
   ) {
     throw new Error(
-      "DATABASE_URL must be a PostgreSQL connection string starting with postgresql:// or postgres://",
+      "DATABASE_URL must start with postgresql:// or postgres://. Do not wrap the value in quotes on Vercel.",
     );
   }
 
@@ -47,6 +49,6 @@ function normalizeDatabaseUrl(connectionString: string) {
 
 export function createPrismaClient() {
   const connectionString = getDatabaseUrl();
-  const adapter = new PrismaPg({ connectionString });
+  const adapter = new PrismaNeon({ connectionString });
   return new PrismaClient({ adapter });
 }
